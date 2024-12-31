@@ -1,0 +1,53 @@
+import React from 'react';
+import './App.css';
+import { useState } from "react";
+import {v4 as uuid} from "uuid";
+
+function App() {
+  const [todo, setTodo] = useState();
+  const [todolist, setTodolist] = useState([]);
+
+const onTodoInputChange = (e) => {  
+  setTodo(e.target.value);
+}
+
+const onAddtoDoClick = () => {
+  setTodolist([...todolist, { id: uuid(), todo: todo , isCompleted : false}]);
+  setTodo("");
+}
+
+const onDelecteClick = (id) => {
+  const updateTodoList = todolist.filter((todo) => todo.id !== id);
+  setTodolist(updateTodoList);
+}
+
+const ontoDoCheckChange = (id) => { 
+ const updateTodoList = todolist.map((todo) => todo.id === id ? {...todo, isCompleted : !todo.isCompleted} : todo);
+ setTodolist(updateTodoList);
+}
+  return (
+    <div className="App" >
+      <h1>My Wishlist</h1>  
+      <div>
+        <input value = {todo} onChange={onTodoInputChange} placeholder="Add your wishlist here..." />
+        <button onClick={onAddtoDoClick}>Add</button>
+      </div>
+      <div>
+        {
+           todolist?.length >0  && todolist.map(todo => (
+          <div key = {todo.id}>
+             <label>
+               <input type="checkbox" onChange={() => ontoDoCheckChange(todo.id)} />
+               <span className={todo.isCompleted ? 'strike-through' : ''}>{todo.todo}</span>
+             </label>
+             <button onClick={() => onDelecteClick(todo.id)}>Delete</button>
+             </div>
+             ) )
+      
+        }
+      </div>
+      </div>
+      );
+}
+
+export default App;
